@@ -85,7 +85,7 @@ class ImageProcessingBot(Bot):
             if "caption" in msg:
                 try:
                     img_path = self.download_user_photo(msg)
-                    caption = msg["caption"].lower()  # Convert caption to lowercase
+                    caption = msg["caption"].lower()  # ignore capital or lower case
                     if caption == "blur":
                         self.send_text(msg['chat']['id'], "Blur filter in progress")
                         new_img = Img(img_path)
@@ -107,16 +107,6 @@ class ImageProcessingBot(Bot):
                         new_path = new_img.save_img()
                         self.send_photo(msg["chat"]["id"], new_path)
                         self.send_text(msg['chat']['id'], "Salt and Pepper filter applied")
-                    elif caption == "mix":
-                        self.send_text(msg['chat']['id'], "Mix filter in progress")
-                        new_img = Img(img_path)
-                        new_img.salt_n_pepper()
-                        new_path = new_img.save_img()
-                        sec_img = Img(new_path)
-                        sec_img.blur()
-                        new_path = sec_img.save_img()
-                        self.send_photo(msg["chat"]["id"], new_path)
-                        self.send_text(msg['chat']['id'], "Mix filter applied")
                     else:
                         self.send_text(msg['chat']['id'], f'Error, please choose a valid caption')
                 except Exception as e:
